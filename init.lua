@@ -142,10 +142,15 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
--- Siempre usa split vertical en archivos nuevos
+-- Siempre usa split vertical en archivos nuevos, excepto en buffers de plugins
 vim.api.nvim_create_autocmd("BufWinEnter", {
 	pattern = "*",
-	command = "if &splitright | wincmd L | endif",
+	callback = function()
+		-- Si no es un buffer flotante ni de un plugin como Lazy, usa split vertical
+		if vim.bo.filetype ~= "lazy" and vim.api.nvim_win_get_config(0).relative == "" then
+			vim.cmd("wincmd L")
+		end
+	end,
 })
 
 -- Map <Leader>t to open a terminal in a vertical split
