@@ -147,7 +147,11 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 	pattern = "*",
 	callback = function()
 		-- Si no es un buffer flotante ni de un plugin como Lazy, usa split vertical
-		if vim.bo.filetype ~= "lazy" and vim.api.nvim_win_get_config(0).relative == "" then
+		if
+			vim.bo.filetype ~= "lazy"
+			and vim.bo.filetype ~= "neo-tree"
+			and vim.api.nvim_win_get_config(0).relative == ""
+		then
 			vim.cmd("wincmd L")
 		end
 	end,
@@ -966,12 +970,33 @@ require("lazy").setup({
 	-- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
 	-- BUG: SOLO HE COPIADO EL init.lua así que no están
+
 	-- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
 	--    This is the easiest way to modularize your config.
 	--
 	--  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
 	--    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
 	-- { import = 'custom.plugins' },
+	{
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v3.x",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+			"MunifTanjim/nui.nvim",
+			-- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+		},
+		opts = {
+			close_if_last_window = true,
+			window = {
+				position = "left",
+				width = 30,
+			},
+		},
+		keys = {
+			{ "<leader>e", ":Neotree toggle<CR>", desc = "Toggle Neo-tree" },
+		},
+	},
 }, {
 	ui = {
 		-- If you are using a Nerd Font: set icons to an empty table which will use the
