@@ -1042,6 +1042,13 @@ require("lazy").setup({
 				position = "left",
 				width = 30,
 			},
+			filesystem = {
+				filtered_items = {
+					visible = true,
+					hide_dotfiles = false,
+					hide_gitignore = false,
+				},
+			},
 		},
 		keys = {
 			{ "<leader>e", ":Neotree toggle<CR>", desc = "Toggle Neo-tree" },
