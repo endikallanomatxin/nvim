@@ -142,6 +142,18 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+-- Siempre usa split vertical en archivos nuevos
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  pattern = "*",
+  command = "if &splitright | wincmd L | endif",
+})
+
+-- Map <Leader>t to open a terminal in a vertical split
+vim.api.nvim_set_keymap("n", "<Leader>t", ":vsplit | terminal<CR> | i", { noremap = true, silent = true })
+
+-- Map <Esc> to exit terminal mode
+vim.api.nvim_set_keymap("t", "<Esc>", "<C-\\><C-n>", { noremap = true, silent = true })
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
