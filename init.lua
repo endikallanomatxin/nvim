@@ -143,19 +143,20 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 -- Siempre usa split vertical en archivos nuevos, excepto en buffers de plugins
-vim.api.nvim_create_autocmd("BufWinEnter", {
-	pattern = "*",
-	callback = function()
-		-- Si no es un buffer flotante ni de un plugin como Lazy, usa split vertical
-		if
-			vim.bo.filetype ~= "lazy"
-			and vim.bo.filetype ~= "neo-tree"
-			and vim.api.nvim_win_get_config(0).relative == ""
-		then
-			vim.cmd("wincmd L")
-		end
-	end,
-})
+-- vim.api.nvim_create_autocmd("BufWinEnter", {
+-- 	pattern = "*",
+-- 	callback = function()
+-- 		-- Si no es un buffer flotante ni de un plugin como Lazy, usa split vertical
+-- 		if
+-- 			vim.bo.filetype ~= "lazy"
+-- 			and vim.bo.filetype ~= "neo-tree"
+-- 			and vim.fn.bufname() ~= "Neo-tree"
+-- 			and vim.api.nvim_win_get_config(0).relative == ""
+-- 		then
+-- 			vim.cmd("wincmd L")
+-- 		end
+-- 	end,
+-- })
 
 -- Map <Leader>t to open a terminal in a vertical split
 vim.api.nvim_set_keymap("n", "<Leader>t", ":vsplit | terminal<CR> | i", { noremap = true, silent = true })
@@ -725,6 +726,7 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
+				"djlint", -- For jinja templates
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -777,11 +779,19 @@ require("lazy").setup({
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
+				template = { "djlint" },
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
 				--
 				-- You can use 'stop_after_first' to run the first available formatter from the list
 				-- javascript = { "prettierd", "prettier", stop_after_first = true },
+			},
+			formatters = {
+				djlint = {
+					inherit = false,
+					command = "djlint",
+					args = { "-", "--profile", '"golang"', "--reformat", "--quiet" },
+				},
 			},
 		},
 	},
@@ -1053,6 +1063,33 @@ require("lazy").setup({
 		keys = {
 			{ "<leader>e", ":Neotree toggle<CR>", desc = "Toggle Neo-tree" },
 		},
+	},
+	{
+		"nvim-tree/nvim-web-devicons",
+		config = function()
+			require("nvim-web-devicons").setup({
+				override = {
+					["html.tmpl"] = {
+						icon = "", -- HTML icon, replace with your preferred icon
+						color = "#DE8C92", -- Custom color for this icon
+						cterm_color = "65",
+						name = "HtmlTmpl", -- Unique name for the icon
+					},
+					["css.tmpl"] = {
+						icon = "", -- CSS icon
+						color = "#61AFEF",
+						cterm_color = "75",
+						name = "CssTmpl",
+					},
+					["js.tmpl"] = {
+						icon = "", -- JS icon
+						color = "#EBCB8B",
+						cterm_color = "178",
+						name = "JsTmpl",
+					},
+				},
+			})
+		end,
 	},
 	{ "github/copilot.vim" },
 }, {
