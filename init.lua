@@ -1054,10 +1054,10 @@ require("lazy").setup({
 			},
 			filesystem = {
 				filtered_items = {
-					visible = true,
+					visible = false,
 					hide_dotfiles = false,
 					hide_gitignore = false,
-					hide_by_name = { ".git" },
+					hide_by_name = { ".git", ".DS_Store" },
 				},
 			},
 		},
