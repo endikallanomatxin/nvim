@@ -780,6 +780,9 @@ require("lazy").setup({
 			formatters_by_ft = {
 				lua = { "stylua" },
 				template = { "djlint" },
+				-- TODO: Find a proper go template formatter
+				gohtml = { "gopls" },
+
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
 				--
