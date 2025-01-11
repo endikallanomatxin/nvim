@@ -406,6 +406,7 @@ require("lazy").setup({
 
 	{ -- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
+		-- NOTE: If it doesn't work, maybe it is because fd or ripgrep are not installed. Check it.
 		event = "VimEnter",
 		branch = "0.1.x",
 		dependencies = {
@@ -454,11 +455,12 @@ require("lazy").setup({
 				-- You can put your default mappings / updates / etc. in here
 				--  All the info you're looking for is in `:help telescope.setup()`
 				--
-				-- defaults = {
-				--   mappings = {
-				--     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-				--   },
-				-- },
+				defaults = {
+					file_ignore_patterns = { ".git", "node_modules", "__pycache__", ".venv" },
+					--   mappings = {
+					--     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+					--   },
+				},
 				-- pickers = {}
 				extensions = {
 					["ui-select"] = {
