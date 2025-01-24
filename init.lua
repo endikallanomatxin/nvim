@@ -741,6 +741,8 @@ require("lazy").setup({
 						require("lspconfig")[server_name].setup(server)
 					end,
 				},
+				automatic_installation = true,
+				ensure_installed = {},
 			})
 		end,
 	},
@@ -773,15 +775,13 @@ require("lazy").setup({
 					lsp_format_opt = "fallback"
 				end
 				return {
-					timeout_ms = 500,
+					timeout_ms = 5000,
 					lsp_format = lsp_format_opt,
 				}
 			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
-				template = { "djlint" },
-				-- TODO: Find a proper go template formatter
-				gohtml = { "gopls" },
+				html = { "djlint" },
 
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
