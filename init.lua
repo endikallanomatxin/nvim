@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 --[[
 
 =====================================================================
@@ -1101,6 +1102,8 @@ require("lazy").setup({
 	{
 		"hkupty/iron.nvim",
 		config = function(plugins, opts)
+			_ = plugins
+			_ = opts
 			local iron = require("iron.core")
 
 			iron.setup({
@@ -1149,6 +1152,24 @@ require("lazy").setup({
 			vim.keymap.set("n", "<space>rF", "<cmd>IronFocus<cr>")
 			vim.keymap.set("n", "<space>rh", "<cmd>IronHide<cr>")
 		end,
+	},
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" }, -- if you use the mini.nvim suite
+		-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+		-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+		---@module 'render-markdown'
+		---@type render.md.UserConfig
+		opts = {},
+	},
+	{
+		"iamcco/markdown-preview.nvim",
+		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+		build = "cd app && npm install",
+		init = function()
+			vim.g.mkdp_filetypes = { "markdown" }
+		end,
+		ft = { "markdown" },
 	},
 }, {
 	ui = {

@@ -9,3 +9,30 @@ cd ~/.config
 git clone https://github.com/endikallanomatxin/nvim.git
 ```
 
+There are some external dependencies that have to be installed:
+
+- git
+
+- make
+
+- unzip
+
+- gcc
+
+- ripgrep
+
+- A clipboard manager:
+    - xclip (Linux)
+    - wl-clipboard (Wayland)
+    - pbcopy (macOS)
+    - clip.exe (Windows)
+
+- A nerd font
+
+- Language specific dependencies:
+
+    - npm
+    - go
+    - rustup
+    - ...
+
