@@ -34,5 +34,15 @@ There are some external dependencies that have to be installed:
     - npm
     - go
     - rustup
+
+    - Java
+        - jdtls
+        - openjdk
+        - Put this into your bashrc or zshrc:
+            ```bash
+            export PATH="/usr/local/opt/openjdk/bin:$PATH"
+            export CPPFLAGS="-I/usr/local/opt/openjdk/include"
+            ```
+
     - ...
 

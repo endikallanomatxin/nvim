@@ -508,6 +508,13 @@ require("lazy").setup({
 
 	-- LSP Plugins
 	{
+		"williamboman/mason.nvim",
+		config = true,
+		opts = {
+			ensure_installed = { "java-debug-adapter", "java-test" },
+		},
+	},
+	{
 		-- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
 		-- used for completion, annotations and signatures of Neovim apis
 		"folke/lazydev.nvim",
@@ -525,7 +532,7 @@ require("lazy").setup({
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			-- Automatically install LSPs and related tools to stdpath for Neovim
-			{ "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
+			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 
@@ -537,6 +544,7 @@ require("lazy").setup({
 			"hrsh7th/cmp-nvim-lsp",
 		},
 		config = function()
+			require("java").setup()
 			-- Brief aside: **What is LSP?**
 			--
 			-- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -993,6 +1001,7 @@ require("lazy").setup({
 				"query",
 				"vim",
 				"vimdoc",
+				"java",
 			},
 			-- Autoinstall languages that are not installed
 			auto_install = true,
@@ -1164,6 +1173,13 @@ require("lazy").setup({
 			vim.g.mkdp_filetypes = { "markdown" }
 		end,
 		ft = { "markdown" },
+	},
+	{
+		"nvim-java/nvim-java",
+		dependencies = { "nvim-java/mason-registry" },
+		init = function()
+			require("lspconfig").jdtls.setup({})
+		end,
 	},
 }, {
 	ui = {
