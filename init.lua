@@ -159,12 +159,6 @@ vim.opt.splitbelow = true
 -- 	end,
 -- })
 
--- Map <Leader>t to open a terminal in a vertical split
-vim.api.nvim_set_keymap("n", "<Leader>t", ":vsplit | terminal<CR> | i", { noremap = true, silent = true })
-
--- Map <Esc> to exit terminal mode
-vim.api.nvim_set_keymap("t", "<Esc>", "<C-\\><C-n>", { noremap = true, silent = true })
-
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
