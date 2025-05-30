@@ -1171,6 +1171,18 @@ require("lazy").setup({
 					highlight = "RenderMarkdownHint",
 					category = "mine",
 				},
+				fix = {
+					raw = "[!FIX]",
+					rendered = "  Fix",
+					highlight = "RenderMarkdownWarn",
+					category = "mine",
+				},
+				check = {
+					raw = "[!CHECK]",
+					rendered = "  Check",
+					highlight = "RenderMarkdownWarn",
+					category = "mine",
+				},
 			},
 		},
 	},
