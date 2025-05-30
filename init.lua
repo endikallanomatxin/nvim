@@ -233,6 +233,23 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- [[ PARA ARGI ]]
+-- Configurar el filetype de los archivos `.rg` como `argi`
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = "*.rg",
+	callback = function()
+		vim.bo.filetype = "argi"
+		-- Syntax highlighting of Lua files
+		vim.opt_local.syntax = "lua"
+	end,
+})
+
+-- Habilitar Copilot en filetype=argi (¡antes de cargar copilot.vim!)
+vim.g.copilot_filetypes = {
+	lua = true, -- seguir con Lua normal
+	argi = true, -- ahora también en “.rg”
+}
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
