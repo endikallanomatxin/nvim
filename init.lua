@@ -561,7 +561,6 @@ require("lazy").setup({
 			"hrsh7th/cmp-nvim-lsp",
 		},
 		config = function()
-			require("java").setup()
 			-- Brief aside: **What is LSP?**
 			--
 			-- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -1214,9 +1213,13 @@ require("lazy").setup({
 	},
 	{
 		"nvim-java/nvim-java",
+		ft = "java", -- <— solo se carga al abrir un .java
 		dependencies = { "nvim-java/mason-registry" },
-		init = function()
-			require("lspconfig").jdtls.setup({})
+		config = function()
+			-- Aquí sí existe el módulo 'java'
+			require("java").setup({
+				-- tus opciones de jdtls, si quieres…
+			})
 		end,
 	},
 }, {
