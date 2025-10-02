@@ -1246,3 +1246,45 @@ require("lazy").setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- === ARGI LSP (custom) ==========================================
+do
+	local lspconfig = require("lspconfig")
+	local configs = require("lspconfig.configs")
+	local util = require("lspconfig.util")
+
+	-- 1) Capabilities con offsetEncoding = utf-8
+	local caps = vim.lsp.protocol.make_client_capabilities()
+	-- caps.offsetEncoding = { "utf-8" }
+	-- (opcional) integra nvim-cmp si quieres
+	local ok_cmp, cmp_caps = pcall(require, "cmp_nvim_lsp")
+	if ok_cmp then
+		caps = cmp_caps.default_capabilities(caps)
+	end
+
+	-- 2) Registra la definición si no existe
+	if not configs.argi then
+		configs.argi = {
+			default_config = {
+				cmd = { vim.fn.expand("~/Documents/software_projects/argi/compiler/zig-out/bin/argi"), "lsp" },
+				filetypes = { "argi" },
+				root_dir = util.root_pattern("argi.toml", "build.zig", ".git") or util.path.dirname,
+				single_file_support = true,
+				capabilities = caps,
+				-- (opcional) personaliza cómo ver diagnósticos
+				handlers = {
+					["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+						virtual_text = true,
+						underline = true,
+						update_in_insert = false,
+						signs = true,
+					}),
+				},
+			},
+		}
+	end
+
+	-- 3) Arranca el servidor
+	lspconfig.argi.setup({})
+end
+-- ================================================================
