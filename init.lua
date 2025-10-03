@@ -234,13 +234,11 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ PARA ARGI ]]
--- Configurar el filetype de los archivos `.rg` como `argi`
+-- en tu autocmd de *.rg
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = "*.rg",
 	callback = function()
 		vim.bo.filetype = "argi"
-		-- Syntax highlighting of Lua files
-		vim.opt_local.syntax = "lua"
 	end,
 })
 
@@ -682,6 +680,31 @@ require("lazy").setup({
 						map("<leader>th", function()
 							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
 						end, "[T]oggle Inlay [H]ints")
+					end
+
+					if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_semanticTokens_full) then
+						local st = vim.lsp.semantic_tokens or {}
+
+						if st.start then
+							st.start(event.buf, client.id)
+						end
+
+						-- 0.10+: force_refresh; builds antiguos: refresh; si no existe, no pasa nada
+						if st.force_refresh then
+							st.force_refresh(event.buf)
+						elseif st.refresh then
+							st.refresh(event.buf)
+						end
+
+						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeFunction", { link = "Function" })
+						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeType", { link = "Type" })
+						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeProperty", { link = "Identifier" })
+						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeVariable", { link = "Identifier" })
+						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeKeyword", { link = "Keyword" })
+						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeNumber", { link = "Number" })
+						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeString", { link = "String" })
+						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeComment", { link = "Comment" })
+						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeOperator", { link = "Operator" })
 					end
 				end,
 			})
