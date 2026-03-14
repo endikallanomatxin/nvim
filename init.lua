@@ -182,7 +182,28 @@ vim.opt.scrolloff = 10
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+local function open_diagnostic_loclist()
+	local items = {}
+	for _, diag in ipairs(vim.diagnostic.get(0)) do
+		local msg = diag.message:gsub("\r", ""):match("^[^\n]*") or diag.message
+		if diag.message:find("\n", 1, true) then
+			msg = msg .. " ..."
+		end
+		table.insert(items, {
+			bufnr = 0,
+			lnum = diag.lnum + 1,
+			col = diag.col + 1,
+			end_lnum = (diag.end_lnum or diag.lnum) + 1,
+			end_col = (diag.end_col or diag.col) + 1,
+			text = msg,
+			type = ({ "E", "W", "I", "H" })[diag.severity] or "E",
+		})
+	end
+	vim.fn.setloclist(0, {}, " ", { title = "Diagnostics", items = items })
+	vim.cmd.lopen()
+end
+
+vim.keymap.set("n", "<leader>q", open_diagnostic_loclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -1289,7 +1310,7 @@ do
 	if not configs.argi then
 		configs.argi = {
 			default_config = {
-				cmd = { vim.fn.expand("~/Documents/software_projects/argi/compiler/zig-out/bin/argi"), "lsp" },
+				cmd = { vim.fn.expand("~/.local/bin/argi"), "lsp" },
 				filetypes = { "argi" },
 				root_dir = util.root_pattern("argi.toml", "build.zig", ".git") or util.path.dirname,
 				single_file_support = true,
@@ -1297,10 +1318,11 @@ do
 				-- (opcional) personaliza cómo ver diagnósticos
 				handlers = {
 					["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-						virtual_text = true,
+						virtual_text = false,
 						underline = true,
 						update_in_insert = false,
 						signs = true,
+						severity_sort = true,
 					}),
 				},
 			},
@@ -1309,5 +1331,42 @@ do
 
 	-- 3) Arranca el servidor
 	lspconfig.argi.setup({})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "argi",
+	callback = function(event)
+		vim.diagnostic.config({
+			virtual_text = false,
+			underline = true,
+			signs = true,
+			severity_sort = true,
+			float = {
+				border = "rounded",
+				source = "always",
+				focusable = false,
+				header = "",
+				prefix = "",
+			},
+		}, event.buf)
+
+		local group = vim.api.nvim_create_augroup("argi-diagnostics-float", { clear = false })
+		vim.api.nvim_clear_autocmds({ group = group, buffer = event.buf })
+		vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+			group = group,
+			buffer = event.buf,
+			callback = function()
+				vim.diagnostic.open_float(nil, {
+					scope = "line",
+					border = "rounded",
+					source = "always",
+					focusable = false,
+					header = "",
+					prefix = "",
+					close_events = { "CursorMoved", "CursorMovedI", "BufHidden", "InsertCharPre", "WinLeave" },
+				})
+			end,
+		})
+	end,
+})
 end
 -- ================================================================
