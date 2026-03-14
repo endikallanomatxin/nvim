@@ -1152,33 +1152,6 @@ require("lazy").setup({
 			{ "<leader>e", ":Neotree toggle<CR>", desc = "Toggle Neo-tree" },
 		},
 	},
-	{
-		"nvim-tree/nvim-web-devicons",
-		config = function()
-			require("nvim-web-devicons").setup({
-				override = {
-					["html.tmpl"] = {
-						icon = "", -- HTML icon, replace with your preferred icon
-						color = "#DE8C92", -- Custom color for this icon
-						cterm_color = "65",
-						name = "HtmlTmpl", -- Unique name for the icon
-					},
-					["css.tmpl"] = {
-						icon = "", -- CSS icon
-						color = "#61AFEF",
-						cterm_color = "75",
-						name = "CssTmpl",
-					},
-					["js.tmpl"] = {
-						icon = "", -- JS icon
-						color = "#EBCB8B",
-						cterm_color = "178",
-						name = "JsTmpl",
-					},
-				},
-			})
-		end,
-	},
 	{ "github/copilot.vim" },
 	{
 		"hkupty/iron.nvim",
