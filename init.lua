@@ -744,15 +744,6 @@ require("lazy").setup({
 							st.refresh(event.buf)
 						end
 
-						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeFunction", { link = "Function" })
-						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeType", { link = "Type" })
-						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeProperty", { link = "Identifier" })
-						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeVariable", { link = "Identifier" })
-						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeKeyword", { link = "Keyword" })
-						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeNumber", { link = "Number" })
-						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeString", { link = "String" })
-						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeComment", { link = "Comment" })
-						vim.api.nvim_set_hl(0, "LspSemanticTokenTypeOperator", { link = "Operator" })
 					end
 				end,
 			})
