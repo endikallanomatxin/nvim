@@ -703,6 +703,33 @@ require("lazy").setup({
 						end, "[T]oggle Inlay [H]ints")
 					end
 
+					if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_hover) and vim.bo[event.buf].filetype == "argi" then
+						local hover_augroup = vim.api.nvim_create_augroup("argi-hover-float", { clear = false })
+						vim.api.nvim_clear_autocmds({ group = hover_augroup, buffer = event.buf })
+						vim.b[event.buf].argi_hover_auto_enabled = true
+
+						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+							group = hover_augroup,
+							buffer = event.buf,
+							callback = function()
+								if not vim.b[event.buf].argi_hover_auto_enabled then
+									return
+								end
+								vim.lsp.buf.hover({
+									border = "rounded",
+									focusable = false,
+								})
+							end,
+						})
+
+						map("<leader>tH", function()
+							vim.b[event.buf].argi_hover_auto_enabled = not vim.b[event.buf].argi_hover_auto_enabled
+							vim.notify(
+								vim.b[event.buf].argi_hover_auto_enabled and "Argi hover auto: on" or "Argi hover auto: off"
+							)
+						end, "[T]oggle [H]over auto")
+					end
+
 					if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_semanticTokens_full) then
 						local st = vim.lsp.semantic_tokens or {}
 
