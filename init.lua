@@ -1323,9 +1323,15 @@ do
 	-- 3) Arranca el servidor
 	lspconfig.argi.setup({})
 
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "argi",
+vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(event)
+		local client = vim.lsp.get_client_by_id(event.data.client_id)
+		if not client or client.name ~= "argi" then
+			return
+		end
+
+		local ns = vim.lsp.diagnostic.get_namespace(client.id)
+
 		vim.diagnostic.config({
 			virtual_text = false,
 			underline = true,
@@ -1338,7 +1344,7 @@ vim.api.nvim_create_autocmd("FileType", {
 				header = "",
 				prefix = "",
 			},
-		}, event.buf)
+		}, ns)
 
 		local group = vim.api.nvim_create_augroup("argi-diagnostics-float", { clear = false })
 		vim.api.nvim_clear_autocmds({ group = group, buffer = event.buf })
