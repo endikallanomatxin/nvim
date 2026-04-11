@@ -1229,16 +1229,6 @@ do
 				root_dir = util.root_pattern("argi.toml", "build.zig", ".git") or util.path.dirname,
 				single_file_support = true,
 				capabilities = caps,
-				-- (opcional) personaliza cómo ver diagnósticos
-				handlers = {
-					["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-						virtual_text = false,
-						underline = true,
-						update_in_insert = false,
-						signs = true,
-						severity_sort = true,
-					}),
-				},
 			},
 		}
 	end
