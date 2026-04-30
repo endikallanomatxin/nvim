@@ -354,7 +354,6 @@ require("lazy").setup({
 		"nvim-telescope/telescope.nvim",
 		-- NOTE: If it doesn't work, maybe it is because fd or ripgrep are not installed. Check it.
 		event = "VimEnter",
-		branch = "0.1.x",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			{ -- If encountering errors, see telescope-fzf-native README for installation instructions
