@@ -987,9 +987,23 @@ require("lazy").setup({
 		build = ":TSUpdate",
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 		config = function()
-			local ts = require("nvim-treesitter")
-			ts.setup({
+			require("nvim-treesitter").setup({
 				install_dir = vim.fn.stdpath("data") .. "/site",
+			})
+
+			require("nvim-treesitter").install({
+				"bash",
+				"c",
+				"diff",
+				"html",
+				"lua",
+				"luadoc",
+				"markdown",
+				"markdown_inline",
+				"query",
+				"vim",
+				"vimdoc",
+				"java",
 			})
 
 			vim.api.nvim_create_autocmd("FileType", {
@@ -998,19 +1012,15 @@ require("lazy").setup({
 					"c",
 					"diff",
 					"html",
-					"java",
 					"lua",
 					"luadoc",
 					"markdown",
-					"query",
 					"vim",
 					"vimdoc",
+					"java",
 				},
-				callback = function(args)
-					pcall(vim.treesitter.start, args.buf)
-					if vim.bo[args.buf].filetype ~= "ruby" then
-						vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-					end
+				callback = function()
+					pcall(vim.treesitter.start)
 				end,
 			})
 		end,
