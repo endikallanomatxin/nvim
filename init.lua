@@ -724,27 +724,24 @@ require("lazy").setup({
 
 			-- You can add other tools here that you want Mason to install
 			-- for you, so that they are available from within Neovim.
-			local ensure_installed = vim.tbl_keys(servers or {})
-			vim.list_extend(ensure_installed, {
-				"stylua", -- Used to format Lua code
-				"djlint", -- For jinja templates
+			require("mason-tool-installer").setup({
+				ensure_installed = {
+					"stylua",
+					"djlint",
+				},
 			})
-			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 			require("mason-lspconfig").setup({
-				handlers = {
-					function(server_name)
-						local server = servers[server_name] or {}
-						-- This handles overriding only values explicitly passed
-						-- by the server configuration above. Useful when disabling
-						-- certain features of an LSP (for example, turning off formatting for ts_ls)
-						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-						require("lspconfig")[server_name].setup(server)
-					end,
-				},
-				automatic_installation = true,
-				ensure_installed = {},
+				ensure_installed = vim.tbl_keys(servers or {}),
+				automatic_enable = false,
 			})
+
+			for server_name, server in pairs(servers) do
+				server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+
+				vim.lsp.config(server_name, server)
+				vim.lsp.enable(server_name)
+			end
 		end,
 	},
 
@@ -1216,34 +1213,22 @@ require("lazy").setup({
 
 -- === ARGI LSP (custom) ==========================================
 do
-	local lspconfig = require("lspconfig")
-	local configs = require("lspconfig.configs")
-	local util = require("lspconfig.util")
-
-	-- 1) Capabilities con offsetEncoding = utf-8
 	local caps = vim.lsp.protocol.make_client_capabilities()
-	-- caps.offsetEncoding = { "utf-8" }
-	-- (opcional) integra nvim-cmp si quieres
+
 	local ok_cmp, cmp_caps = pcall(require, "cmp_nvim_lsp")
 	if ok_cmp then
 		caps = cmp_caps.default_capabilities(caps)
 	end
 
-	-- 2) Registra la definición si no existe
-	if not configs.argi then
-		configs.argi = {
-			default_config = {
-				cmd = { vim.fn.expand("~/.local/bin/argi"), "lsp" },
-				filetypes = { "argi" },
-				root_dir = util.root_pattern("argi.toml", "build.zig", ".git") or util.path.dirname,
-				single_file_support = true,
-				capabilities = caps,
-			},
-		}
-	end
+	vim.lsp.config("argi", {
+		cmd = { vim.fn.expand("~/.local/bin/argi"), "lsp" },
+		filetypes = { "argi" },
+		root_markers = { "argi.toml", "build.zig", ".git" },
+		single_file_support = true,
+		capabilities = caps,
+	})
 
-	-- 3) Arranca el servidor
-	lspconfig.argi.setup({})
+	vim.lsp.enable("argi")
 
 	vim.api.nvim_create_autocmd("LspAttach", {
 		callback = function(event)
