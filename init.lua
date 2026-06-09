@@ -983,8 +983,12 @@ require("lazy").setup({
 		build = ":TSUpdate",
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 		config = function()
+			local ts_install_dir = vim.fn.stdpath("data") .. "/site"
+
+			vim.opt.runtimepath:prepend(ts_install_dir)
+
 			require("nvim-treesitter").setup({
-				install_dir = vim.fn.stdpath("data") .. "/site",
+				install_dir = ts_install_dir,
 			})
 
 			require("nvim-treesitter").install({
@@ -1011,6 +1015,8 @@ require("lazy").setup({
 					"lua",
 					"luadoc",
 					"markdown",
+					"markdown_inline",
+					"query",
 					"vim",
 					"vimdoc",
 					"java",
